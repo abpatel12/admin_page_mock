@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>REDIX Dashboard V1.0</title>
+
+  <!-- Google Font — must load before style.css -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <!-- All styles live in style.css -->
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ============================================================
+     MODAL POP-UP
+     Hidden by default (.modal-overlay has display:none in CSS).
+     JS adds the class .open to show it when ⊕ is clicked.
+     ============================================================ -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+
+    <!-- Close button — calls closeModal() in script.js -->
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <!-- Title is set by JS when the modal opens -->
+    <div class="modal-title" id="modal-title">Detail View</div>
+
+    <!-- §2.1.3 — Time range picker inside the modal
+         Lets the user adjust the range just for this pop-up view -->
+    <div class="modal-timebar" id="modal-timebar"></div>
+
+    <!-- §3.1.4.1.1 — Bar chart, built by JS -->
+    <div class="modal-chart" id="modal-chart"></div>
+
+    <!-- §3.1.4.1.2 — Metric stat cards, built by JS -->
+    <div class="modal-stats" id="modal-stats"></div>
+
+  </div>
+</div>
+
+
+<!-- ============================================================
+     PAGE LAYOUT
+     ============================================================ -->
+<div class="layout">
+
+  <!-- ====================================================
+       SIDEBAR NAVIGATION
+       ==================================================== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">REDIX</div>
+
+    <a class="nav-link active">📊 Dashboard</a>
+    <a class="nav-link">🛍 Orders</a>
+    <a class="nav-link">📦 Products</a>
+    <a class="nav-link">👥 Customers</a>
+    <a class="nav-link">📄 Reports</a>
+    <a class="nav-link">% Discounts</a>
+
+    <div class="nav-divider"></div>
+
+    <a class="nav-link">⚙ Integrations</a>
+    <a class="nav-link">❓ Help</a>
+    <a class="nav-link">⚙️ Settings</a>
+  </aside>
+
+
+  <!-- ====================================================
+       MAIN CONTENT AREA
+       ==================================================== -->
+  <div class="main">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div class="topbar-title">
+        Dashboard
+        <span style="font-size:.75rem; font-weight:400; color:#9ca3af; margin-left:6px">V1.0</span>
+      </div>
+      <div class="topbar-right">
+        <span class="admin-badge">ADMIN VIEW</span>
+        <span style="font-size:.84rem; font-weight:600">Marcus George</span>
+        <div class="avatar">MG</div>
+      </div>
+    </div>
+
+
+    <!-- ====================================================
+         SECTION 2 — TIME RANGE CONTROLLER
+         §2.1.1.1 — preset pill buttons
+         §2.1.1.2 — custom start + end date pickers
+         §2.1.4   — JS saves the choice to localStorage
+         ==================================================== -->
+    <div class="timebar">
+      <span class="timebar-label">VIEW RANGE</span>
+
+      <!-- Preset ranges — only one active at a time (handled by JS) -->
+      <button class="pill" onclick="pickRange(this)">5 yrs</button>
+      <button class="pill" onclick="pickRange(this)">4 yrs</button>
+      <button class="pill" onclick="pickRange(this)">3 yrs</button>
+      <button class="pill" onclick="pickRange(this)">2 yrs</button>
+      <button class="pill active" onclick="pickRange(this)">1 yr</button>
+      <button class="pill" onclick="pickRange(this)">6 mo</button>
+      <button class="pill" onclick="pickRange(this)">3 mo</button>
+      <button class="pill" onclick="pickRange(this)">1 mo</button>
+
+      <!-- Custom date range -->
+      <span class="date-sep" style="margin-left:8px">| Custom:</span>
+      <input type="date" class="date-in" id="date-from"/>
+      <span class="date-sep">→</span>
+      <input type="date" class="date-in" id="date-to"/>
+    </div>
+
+
+    <!-- ====================================================
+         DASHBOARD CONTENT
+         ==================================================== -->
+    <div class="content">
+
+
+      <!-- ─────────────────────────────────────────────────
+           §1  LEGEND OF ICONS
+           ───────────────────────────────────────────────── -->
+      <div>
+        <div class="sec-head">§1 · Legend of Icons</div>
+        <div class="legend-bar">
+          <div class="legend-item"><span style="color:#16a34a; font-size:1rem">▲</span> Increase</div>
+          <div class="legend-item"><span style="color:#dc2626; font-size:1rem">▼</span> Decrease</div>
+          <div class="legend-item"><span style="color:#9ca3af; font-size:1rem">●</span> No Change</div>
+          <div class="legend-item"><span style="color:#f97316; font-size:1rem">%</span> Percentage</div>
+          <div class="legend-item"><span style="color:#f97316; font-size:1rem">⊕</span> Click to Expand Pop-up</div>
+          <div class="legend-item"><span style="font-size:1rem">☐</span> Checkbox</div>
+        </div>
+      </div>
+
+
+      <!-- ─────────────────────────────────────────────────
+           §3  USERS
+           ───────────────────────────────────────────────── -->
+      <div>
+        <div class="sec-head">§3 · Users</div>
+
+        <!-- §3.1 Total Customers -->
+        <div class="sub-head">3.1 Total Customers</div>
+        <div class="grid-3" style="margin-bottom:20px">
+
+          <!-- §3.1.1 Retail — shows count | $total sales -->
+          <div class="card">
+            <button class="expand-btn" onclick="openModal('Retail Customers','retail')">⊕</button>
+            <div class="card-label">Retail</div>
+            <div class="card-value">3,842</div>
+            <div class="card-sub">3,842 | $148,320.00</div>
+            <span class="badge up">▲ 12%</span>
+            <div class="mini-chart">
+              <div class="mini-bar" style="height:55%"></div>
+              <div class="mini-bar" style="height:70%"></div>
+              <div class="mini-bar" style="height:62%"></div>
+              <div class="mini-bar" style="height:85%"></div>
+              <div class="mini-bar" style="height:78%"></div>
+              <div class="mini-bar" style="height:100%"></div>
+            </div>
+          </div>
+
+          <!-- §3.1.2 Trade -->
+          <div class="card">
+            <button class="expand-btn" onclick="openModal('Trade Customers','trade')">⊕</button>
+            <div class="card-label">Trade</div>
+            <div class="card-value">1,205</div>
+            <div class="card-sub">1,205 | $89,740.50</div>
+            <span class="badge down">▼ 4%</span>
+            <div class="mini-chart">
+              <div class="mini-bar" style="height:80%"></div>
+              <div class="mini-bar" style="height:65%"></div>
+              <div class="mini-bar" style="height:70%"></div>
+              <div class="mini-bar" style="height:55%"></div>
+              <div class="mini-bar" style="height:60%"></div>
+              <div class="mini-bar" style="height:50%"></div>
+            </div>
+          </div>
+
+          <!-- §3.1.3 Wholesale -->
+          <div class="card">
+            <button class="expand-btn" onclick="openModal('Wholesale Customers','wholesale')">⊕</button>
+            <div class="card-label">Wholesale</div>
+            <div class="card-value">672</div>
+            <div class="card-sub">672 | $214,900.00</div>
+            <span class="badge up">▲ 8%</span>
+            <div class="mini-chart">
+              <div class="mini-bar" style="height:50%"></div>
+              <div class="mini-bar" style="height:60%"></div>
+              <div class="mini-bar" style="height:72%"></div>
+              <div class="mini-bar" style="height:78%"></div>
+              <div class="mini-bar" style="height:88%"></div>
+              <div class="mini-bar" style="height:100%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- §3.2 Workshops -->
+        <div class="sub-head">3.2 Workshops</div>
+        <div class="grid-3" style="margin-bottom:20px">
+
+          <!-- §3.2.1 Total Workshops -->
+          <div class="card">
+            <button class="expand-btn" onclick="openModal('Total Workshops','wk-total')">⊕</button>
+            <div class="card-label">Total Workshops</div>
+            <div class="card-value">184</div>
+            <div class="card-sub">184 | $42,800.00</div>
+            <span class="badge flat">● No change</span>
+          </div>
+
+          <!-- §3.2.2 Workshops that placed orders -->
+          <div class="card">
+            <button class="expand-btn" onclick="openModal('Workshops — Placed Orders','wk-orders')">⊕</button>
+            <div class="card-label">Placed Orders</div>
+            <div class="card-value">97</div>
+            <div class="card-sub">97 | $31,450.00</div>
+            <span class="badge up">▲ 6%</span>
+          </div>
+
+          <!-- §3.2.3 Workshops — orders in past 30 days -->
+          <div class="card">
+            <button class="expand-btn" onclick="openModal('Workshops — Last 30 Days','wk-30d')">⊕</button>
+            <div class="card-label">Orders (Last 30 Days)</div>
+            <div class="card-value">34</div>
+            <div class="card-sub">34 | $9,200.00</div>
+            <span class="badge up">▲ 21%</span>
+          </div>
+        </div>
+
+        <!-- §3.3 Resellers -->
+        <div class="sub-head">3.3 Resellers</div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-label">Total Resellers</div>
+            <div class="card-value">58</div>
+            <!-- §3.3.1.1 count | total sales generated -->
+            <div class="card-sub">58 | $67,300.00</div>
+            <!-- §3.3.1.2 increase/decrease with % indicator icon -->
+            <span class="badge up">▲ 3.4%</span>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ─────────────────────────────────────────────────
+           §4  SALES
+           ───────────────────────────────────────────────── -->
+      <div>
+        <div class="sec-head">§4 · Sales</div>
+        <div class="grid-3">
+
+          <!-- §4.1 Percentage from past 12 months -->
+          <div class="card">
+            <div class="card-label">vs Past 12 Months</div>
+            <div class="card-value" style="color:#16a34a">+18%</div>
+            <span class="badge up">▲ Above target</span>
+          </div>
+
+          <!-- §4.2 Percentage from same time in last quarter -->
+          <div class="card">
+            <div class="card-label">vs Last Quarter Same Period</div>
+            <div class="card-value" style="color:#dc2626">-6%</div>
+            <span class="badge down">▼ Below last quarter</span>
+          </div>
+
+          <!-- §4.3 Overall percentage -->
+          <div class="card">
+            <div class="card-label">Overall % Change</div>
+            <div class="card-value" style="color:#f97316">+11%</div>
+            <span class="badge up">▲ Trending up</span>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ─────────────────────────────────────────────────
+           §5  ORDERS
+           ───────────────────────────────────────────────── -->
+      <div>
+        <div class="sec-head">§5 · Orders</div>
+        <div class="grid-5">
+
+          <!-- §5.1 Number of orders -->
+          <div class="card">
+            <div class="card-label">Total Orders</div>
+            <div class="card-value">2,341</div>
+            <span class="badge up">▲ 9%</span>
+          </div>
+
+          <!-- §5.2 Total items -->
+          <div class="card">
+            <div class="card-label">Total Items</div>
+            <div class="card-value">14,820</div>
+            <span class="badge up">▲ 5%</span>
+          </div>
+
+          <!-- §5.3 In Quote -->
+          <div class="card">
+            <div class="card-label">In Quote</div>
+            <div class="card-value">312</div>
+            <span class="status quote">QUOTE</span>
+          </div>
+
+          <!-- §5.4 In Process -->
+          <div class="card">
+            <div class="card-label">In Process</div>
+            <div class="card-value">847</div>
+            <span class="status process">IN PROCESS</span>
+          </div>
+
+          <!-- §5.5 Completed -->
+          <div class="card">
+            <div class="card-label">Completed</div>
+            <div class="card-value">1,182</div>
+            <span class="status complete">COMPLETE</span>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ─────────────────────────────────────────────────
+           §6  FINANCIALS
+           ───────────────────────────────────────────────── -->
+      <div>
+        <div class="sec-head">§6 · Financials</div>
+        <div class="grid-5">
+
+          <!-- §6.1 Total amount in orders -->
+          <div class="card">
+            <div class="card-label">Total In Orders</div>
+            <div class="card-value" style="font-size:1.4rem">$521,300</div>
+            <span class="badge up">▲ 14%</span>
+          </div>
+
+          <!-- §6.2 Total paid -->
+          <div class="card">
+            <div class="card-label">Total Paid</div>
+            <div class="card-value" style="font-size:1.4rem; color:#16a34a">$384,920</div>
+            <span class="badge up">▲ 11%</span>
+          </div>
+
+          <!-- §6.3 Total owing -->
+          <div class="card">
+            <div class="card-label">Total Owing</div>
+            <div class="card-value" style="font-size:1.4rem; color:#dc2626">$136,380</div>
+            <span class="badge down">▼ Outstanding</span>
+          </div>
+
+          <!-- §6.4 Internal delivery charges -->
+          <div class="card">
+            <div class="card-label">Internal Delivery</div>
+            <div class="card-value" style="font-size:1.4rem">$8,420</div>
+            <span class="badge flat">● Stable</span>
+          </div>
+
+          <!-- §6.5 External delivery charges -->
+          <div class="card">
+            <div class="card-label">External Delivery</div>
+            <div class="card-value" style="font-size:1.4rem">$19,800</div>
+            <span class="badge up">▲ 7%</span>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ─────────────────────────────────────────────────
+           §7  PRODUCTS
+           ───────────────────────────────────────────────── -->
+      <div>
+        <div class="sec-head">§7 · Products</div>
+        <div class="grid-3">
+
+          <!-- §7.1 Number of products -->
+          <div class="card">
+            <div class="card-label">Total Products</div>
+            <div class="card-value">1,204</div>
+            <span class="badge up">▲ 3%</span>
+          </div>
+
+          <!-- §7.2 Number of categories -->
+          <div class="card">
+            <div class="card-label">Total Categories</div>
+            <div class="card-value">48</div>
+            <span class="badge flat">● No change</span>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ─────────────────────────────────────────────────
+           §8  RESELLERS — Commissions
+           ───────────────────────────────────────────────── -->
+      <div>
+        <div class="sec-head">§8 · Resellers — Commissions</div>
+        <div class="grid-3">
+
+          <!-- §8.1 Total in commissions -->
+          <div class="card">
+            <div class="card-label">Total Commissions</div>
+            <div class="card-value">$24,600</div>
+            <span class="badge up">▲ 8%</span>
+          </div>
+
+          <!-- §8.2 Total paid in commissions -->
+          <div class="card">
+            <div class="card-label">Paid Commissions</div>
+            <div class="card-value" style="color:#16a34a">$19,200</div>
+            <span class="badge up">▲ 5%</span>
+          </div>
+
+          <!-- §8.3 Total owing in commissions -->
+          <div class="card">
+            <div class="card-label">Owing Commissions</div>
+            <div class="card-value" style="color:#dc2626">$5,400</div>
+            <span class="badge down">▼ Outstanding</span>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ─────────────────────────────────────────────────
+           §9  BOOKINGS
+           ───────────────────────────────────────────────── -->
+      <div>
+        <div class="sec-head">§9 · Bookings</div>
+        <div class="grid-5">
+
+          <!-- §9.1 Total bookings -->
+          <div class="card">
+            <div class="card-label">Total Bookings</div>
+            <div class="card-value">623</div>
+            <span class="badge up">▲ 18%</span>
+          </div>
+
+          <!-- §9.2 Bookings completed -->
+          <div class="card">
+            <div class="card-label">Completed</div>
+            <div class="card-value">410</div>
+            <span class="status complete">COMPLETE</span>
+          </div>
+
+          <!-- §9.3 Bookings in work -->
+          <div class="card">
+            <div class="card-label">In Work</div>
+            <div class="card-value">158</div>
+            <span class="status process">IN WORK</span>
+          </div>
+
+          <!-- §9.4 Cancelled bookings -->
+          <div class="card">
+            <div class="card-label">Cancelled</div>
+            <div class="card-value" style="color:#dc2626">55</div>
+            <span class="status cancel">CANCELLED</span>
+          </div>
+        </div>
+      </div>
+
+
+    </div><!-- end .content -->
+  </div><!-- end .main -->
+</div><!-- end .layout -->
+
+
+<!-- ============================================================
+     Load JavaScript LAST — all HTML elements must exist first
+     ============================================================ -->
+<script src="script.js"></script>
+
+</body>
+</html>

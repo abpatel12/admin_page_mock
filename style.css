@@ -1,0 +1,441 @@
+/* ============================================================
+   REDIX DASHBOARD V1.0 — style.css
+   All visual styles. Linked from index.html.
+   ============================================================ */
+
+/* ============================================================
+   1. RESET — remove browser default spacing
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html, body { height: 100%; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #f8f6f3;
+  color: #1c1917;
+  font-size: 14px;
+}
+
+/* ============================================================
+   2. PAGE LAYOUT — sidebar left, main right
+   ============================================================ */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   3. SIDEBAR
+   ============================================================ */
+.sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-right: 1px solid #e8e2da;
+  padding: 20px 14px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sidebar-logo {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #f97316;
+  letter-spacing: 2px;
+  padding: 6px 8px 22px;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: .84rem;
+  font-weight: 600;
+  color: #78716c;
+  text-decoration: none;
+  transition: .15s;
+}
+.nav-link:hover  { background: #fff7ed; color: #f97316; }
+.nav-link.active { background: #f97316; color: #ffffff; }
+.nav-divider     { height: 1px; background: #e8e2da; margin: 10px 0; }
+
+/* ============================================================
+   4. MAIN CONTENT AREA (right of sidebar)
+   ============================================================ */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   5. TOP BAR
+   ============================================================ */
+.topbar {
+  background: #ffffff;
+  border-bottom: 1px solid #e8e2da;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.topbar-title { font-size: 1.2rem; font-weight: 800; }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+
+.admin-badge {
+  background: #f97316;
+  color: #ffffff;
+  font-size: .68rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: .5px;
+}
+.avatar {
+  width: 34px;
+  height: 34px;
+  background: #f97316;
+  border-radius: 50%;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: .82rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================
+   6. SECTION 2 — TIME RANGE CONTROLLER
+   ============================================================ */
+.timebar {
+  background: #ffffff;
+  border-bottom: 1px solid #e8e2da;
+  padding: 10px 28px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.timebar-label {
+  font-size: .7rem;
+  font-weight: 700;
+  color: #9ca3af;
+  letter-spacing: 1px;
+  margin-right: 4px;
+}
+
+/* Pill button — each time range option */
+.pill {
+  padding: 5px 12px;
+  border: 1.5px solid #e8e2da;
+  border-radius: 20px;
+  font-size: .75rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #78716c;
+  background: #ffffff;
+  font-family: inherit;
+  transition: .15s;
+}
+.pill:hover  { border-color: #f97316; color: #f97316; }
+.pill.active { background: #f97316; color: #ffffff; border-color: #f97316; }
+
+/* Custom date picker separators and inputs */
+.date-sep { color: #9ca3af; font-size: .75rem; }
+.date-in {
+  background: #f8f6f3;
+  border: 1.5px solid #e8e2da;
+  border-radius: 7px;
+  padding: 4px 10px;
+  font-size: .75rem;
+  font-family: inherit;
+  color: #1c1917;
+  outline: none;
+}
+.date-in:focus { border-color: #f97316; }
+
+/* ============================================================
+   7. SCROLLABLE CONTENT AREA
+   ============================================================ */
+.content {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+}
+
+/* Section heading — e.g. "§3 · USERS" */
+.sec-head {
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-bottom: 12px;
+}
+
+/* Sub-section heading — e.g. "3.1 Total Customers" */
+.sub-head {
+  font-size: .78rem;
+  font-weight: 700;
+  color: #78716c;
+  margin-bottom: 10px;
+}
+
+/* ============================================================
+   8. CARD GRIDS
+   ============================================================ */
+
+/* Wider cards for customers, sales, products */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+/* Narrower cards for orders, financials, bookings */
+.grid-5 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: 14px;
+}
+
+/* ============================================================
+   9. CARD — white box used for every metric
+   ============================================================ */
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e8e2da;
+  padding: 18px 20px;
+  box-shadow: 0 1px 8px rgba(0,0,0,.07);
+  position: relative;
+  transition: .2s;
+}
+.card:hover {
+  box-shadow: 0 4px 20px rgba(249,115,22,.12);
+  border-color: #fed7aa;
+}
+
+/* Card internal parts */
+.card-label {
+  font-size: .72rem;
+  font-weight: 700;
+  color: #78716c;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 8px;
+}
+.card-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.card-sub {
+  font-size: .82rem;
+  font-weight: 600;
+  color: #f97316;
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   10. BADGES — ▲ green / ▼ red / ● muted
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: .72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.badge.up   { background: #dcfce7; color: #16a34a; }
+.badge.down { background: #fee2e2; color: #dc2626; }
+.badge.flat { background: #f5f5f4; color: #78716c; }
+
+/* ============================================================
+   11. STATUS PILLS — order / booking states
+   ============================================================ */
+.status          { font-size: .68rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; display: inline-block; margin-top: 4px; }
+.status.quote    { background: #fef9c3; color: #854d0e; }
+.status.process  { background: #dbeafe; color: #1d4ed8; }
+.status.complete { background: #dcfce7; color: #16a34a; }
+.status.cancel   { background: #fee2e2; color: #dc2626; }
+
+/* ============================================================
+   12. EXPAND BUTTON — ⊕ top-right corner of expandable cards
+   ============================================================ */
+.expand-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: #f8f6f3;
+  border: 1px solid #e8e2da;
+  cursor: pointer;
+  font-size: .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #78716c;
+  transition: .15s;
+}
+.expand-btn:hover { background: #f97316; color: #ffffff; border-color: #f97316; }
+
+/* ============================================================
+   13. MINI BAR CHART — pure CSS trend bars on cards
+   ============================================================ */
+.mini-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 40px;
+  margin-top: 10px;
+}
+.mini-bar {
+  flex: 1;
+  background: #fff7ed;
+  border-radius: 3px 3px 0 0;
+  transition: .2s;
+  cursor: pointer;
+}
+.mini-bar:hover { background: #f97316; }
+
+/* ============================================================
+   14. LEGEND BAR — Section 1 icon key
+   ============================================================ */
+.legend-bar {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: #ffffff;
+  border: 1px solid #e8e2da;
+  border-radius: 10px;
+  padding: 12px 20px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .75rem;
+  color: #78716c;
+}
+
+/* ============================================================
+   15. MODAL — pop-up detail view (§3.1.4, §3.2.4)
+   ============================================================ */
+
+/* Dark backdrop behind the modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+/* JS adds this class to show the modal */
+.modal-overlay.open { display: flex; }
+
+/* White modal box */
+.modal-box {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 28px;
+  width: 92%;
+  max-width: 700px;
+  max-height: 88vh;
+  overflow-y: auto;
+  position: relative;
+  animation: pop .2s ease;
+}
+
+/* Slide-up entrance animation */
+@keyframes pop {
+  from { opacity: 0; transform: scale(.95) translateY(12px); }
+  to   { opacity: 1; transform: scale(1)   translateY(0); }
+}
+
+/* ✕ Close button */
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #f8f6f3;
+  border: 1px solid #e8e2da;
+  border-radius: 7px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .15s;
+}
+.modal-close:hover { background: #dc2626; color: #ffffff; border-color: #dc2626; }
+
+.modal-title { font-size: 1.05rem; font-weight: 800; margin-bottom: 14px; }
+
+/* Time range bar inside the modal */
+.modal-timebar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  background: #f8f6f3;
+  border: 1px solid #e8e2da;
+  border-radius: 9px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+
+/* Bar chart inside the modal */
+.modal-chart {
+  background: #f8f6f3;
+  border: 1px solid #e8e2da;
+  border-radius: 9px;
+  padding: 14px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 130px;
+}
+.modal-bar {
+  flex: 1;
+  min-width: 16px;
+  border-radius: 4px 4px 0 0;
+  background: #f97316;
+  opacity: .7;
+  cursor: pointer;
+  transition: .15s;
+}
+.modal-bar:hover { opacity: 1; }
+
+/* Stat cards grid inside the modal */
+.modal-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.modal-stat { background: #fff7ed; border-radius: 9px; padding: 13px; }
+.ms-label   { font-size: .68rem; color: #78716c; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; }
+.ms-value   { font-size: 1.15rem; font-weight: 800; }
